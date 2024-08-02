@@ -2,13 +2,15 @@ name: Process Audio Files
 
 on:
   workflow_run:
-    workflows: ["Get Hash File"]
-    types:
-      - completed
+#    workflows: ["Get Hash File"]
+#    types:
+#      - completed
 
 jobs:
   process-data:
     runs-on: ubuntu-latest
+    container:
+      image: debian:unstable-slim
 
     steps:
       - name: Checkout code
@@ -72,24 +74,3 @@ jobs:
       - name: Synchronize files
         run: |
 #          rclone copy xxx oss:/xxx
-
-      - name: Load matrix config
-        id: load-matrix
-        run: |
-          MATRIX_CONFIG=$(cat matrix_config.json)
-          echo "::set-output name=matrix::${MATRIX_CONFIG}"
-
-      - name: Download data file for ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
-        run: |
-          curl -o ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.data http://example.com/${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.data
-          curl -o ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.en_us.data http://example.com/${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.en_us.data
-
-      - name: Process data file for ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
-        run: |
-          python process_data.py ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.data ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.en_us.data
-
-      - name: Upload processed files for ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: processed_files_${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
-          path: ./processed_files_${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
