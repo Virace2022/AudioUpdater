@@ -202,7 +202,8 @@ def main():
     logger.add(os.path.join(args.logdir, "script.log"), rotation="500 MB")
 
     # 检查 manifest_downloader 可执行文件是否存在
-    if not os.path.isfile(args.manifest_downloader):
+    args.manifest_downloader = get_absolute_path(args.manifest_downloader)
+    if not os.path.isfile(args.manifest_downloader) and not os.path.exists(args.manifest_downloader):
         logger.error(f"ManifestDownloader 可执行文件 '{args.manifest_downloader}' 不存在。")
         parser.print_help()
         sys.exit(1)
@@ -235,8 +236,6 @@ def main():
     lcu_combined_filter = "|".join(lcu_filters)
     args.outpath = get_absolute_path(args.outpath)
     args.logdir = get_absolute_path(args.logdir)
-    args.manifest_downloader = get_absolute_path(args.manifest_downloader) if not os.path.isfile(
-        args.manifest_downloader) else args.manifest_downloader
 
     # 打印参数（用于测试）
     logger.info(f"游戏资源下载类型: {args.game_type}")
