@@ -4,16 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       message:
-        description: '手动测试'
+        description: 手动测试
         required: false
+
+env:
+  DOWNLOAD_DIR: ./download
+  LOG_DIR: ./logs
+  WORK_DIR: ./work
 
 jobs:
   get-list:
     runs-on: ubuntu-latest
-
+    container:
+      image: debian:unstable-slim
     steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install nodejs python3 python3-pip python3-venv git wget curl -y 1>/dev/null
+
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Checkout REPO
         uses: actions/checkout@v4
@@ -24,7 +35,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Download Dependent Programs
         run: |
@@ -33,25 +44,29 @@ jobs:
 
       - name: Download the required wad file
         run: |
-          python3 -m venv download
-          . download/bin/activate
+          mkdir -p $DOWNLOAD_DIR
+          mkdir -p $LOG_DIR
+          mkdir -p $WORK_DIR
+          python3 -m venv .download_venv
+          . .download_venv/bin/activate
           pip install -r requirements.lock  1>/dev/null
-#           下载
-#           python main.py
+          python download.py -g c -l l lz -o $DOWNLOAD_DIR -d $LOG_DIR -r 5 -m "ManifestDownloader"
 
       - name: Get File Hash Table
         run: |
-          python3 -m venv venv
-          . venv/bin/activate
+          python3 -m venv .h.venv
+          . .h.venv/bin/activate
           pip install -r requirements.lock  1>/dev/null
-#          设置环境变量 根据 .lol.env
-#        python main.py
-
+          rm .lol.env && touch .lol.env
+          echo "LOL_GAME_PATH=$(realpath $DOWNLOAD_DIR)" >> .lol.env
+          echo "LOL_GAME_REGION=zh_CN" >> .lol.env
+          echo "LOL_OUTPUT_PATH=$(realpath $WORK_DIR)" >> .lol.env
+          python -c "from config import config_instance; print(config_instance)"
         working-directory: lol_extract_voice
 
       - name: Compress the hash table file
         run: |
-#          tar -zcf hash.tar.gz 哈希表目录
+          tar -zcf hash.tar.gz "$(realpath $WORK_DIR)/hashes"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
