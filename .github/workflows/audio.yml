@@ -1,10 +1,16 @@
 name: Process Audio Files
 
 on:
-  workflow_run:
-#    workflows: ["Get Hash File"]
-#    types:
-#      - completed
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 手动测试
+        required: false
+#  workflow_run:
+#      workflows: ["Get Hash File"]
+#      types:
+#        - completed
+
 
 jobs:
   process-data:
