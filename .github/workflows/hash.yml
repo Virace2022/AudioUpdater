@@ -1,0 +1,61 @@
+name: Get Hash File
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: '手动测试'
+        required: false
+
+jobs:
+  get-list:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Checkout REPO
+        uses: actions/checkout@v4
+        with:
+          repository: Virace/lol_extract_voice
+          path: lol_extract_voice
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Download Dependent Programs
+        run: |
+          wget https://github.com/Morilli/ManifestDownloader/releases/latest/download/ManifestDownloader
+          chmod +x ManifestDownloader
+
+      - name: Download the required wad file
+        run: |
+          python3 -m venv download
+          . download/bin/activate
+          pip install -r requirements.lock  1>/dev/null
+#           下载
+#           python main.py
+
+      - name: Get File Hash Table
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.lock  1>/dev/null
+#          设置环境变量 根据 .lol.env
+#        python main.py
+
+        working-directory: lol_extract_voice
+
+      - name: Compress the hash table file
+        run: |
+#          tar -zcf hash.tar.gz 哈希表目录
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: hash
+          path: |
+            hash.tar.gz

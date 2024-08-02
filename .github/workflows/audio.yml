@@ -1,0 +1,95 @@
+name: Process Audio Files
+
+on:
+  workflow_run:
+    workflows: ["Get Hash File"]
+    types:
+      - completed
+
+jobs:
+  process-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Checkout REPO
+        uses: actions/checkout@v4
+        with:
+          repository: Virace/lol_extract_voice
+          path: lol_extract_voice
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: hash
+
+      - name: Unzip Hash Table File
+        run: |
+          tar -zxf hash.tar.gz
+
+      - name: Download Dependent Programs
+        run: |
+          wget https://github.com/Morilli/ManifestDownloader/releases/latest/download/ManifestDownloader
+          chmod +x ManifestDownloader
+
+      - name: Install rclone and test object storage connectivity
+        run: |
+          curl https://rclone.org/install.sh | bash  1>/dev/null
+          cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 1>/dev/null
+#          rclone启动的配置文件如果是动态的可以随私有仓库提供，静态则使用加密变量提供
+#          总之这位置需要处理以下配置文件，如果怕路径问题则可以再容器中操作
+#          mkdir -p ~/.config/rclone
+#
+#          使用ls或者check校验一个固定文件hash来测试配置文件与oss链接是否正常
+#          rclone ls oss:/
+
+      - name: Download the required wad file
+        run: |
+          python3 -m venv download
+          . download/bin/activate
+          pip install -r requirements.lock  1>/dev/null
+#           下载
+#           python main.py
+
+      - name: Get Audio File
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.lock  1>/dev/null
+#          设置环境变量 根据 .lol.env
+
+#          python main.py
+#          只需要调用 其中的get_game_audio(哈希表目录, 'wem', )
+
+        working-directory: lol_extract_voice
+      - name: Synchronize files
+        run: |
+#          rclone copy xxx oss:/xxx
+
+      - name: Load matrix config
+        id: load-matrix
+        run: |
+          MATRIX_CONFIG=$(cat matrix_config.json)
+          echo "::set-output name=matrix::${MATRIX_CONFIG}"
+
+      - name: Download data file for ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
+        run: |
+          curl -o ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.data http://example.com/${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.data
+          curl -o ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.en_us.data http://example.com/${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.en_us.data
+
+      - name: Process data file for ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
+        run: |
+          python process_data.py ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.data ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}.en_us.data
+
+      - name: Upload processed files for ${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: processed_files_${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
+          path: ./processed_files_${{ fromJson(steps.load-matrix.outputs.matrix).file_id }}
