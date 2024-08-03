@@ -51,7 +51,7 @@ jobs:
           python3 -m venv .download_venv
           . .download_venv/bin/activate
           pip install -r requirements.lock  1>/dev/null
-          python download.py -g c m -l l lz -o $DOWNLOAD_DIR -d $LOG_DIR -r 5 -m "ManifestDownloader"
+          python download.py -g c -l l lz -o $DOWNLOAD_DIR -d $LOG_DIR -r 5 -m "ManifestDownloader"
           echo "LOL_GAME_PATH=$(realpath $DOWNLOAD_DIR)" >> .lol.env
           echo "LOL_GAME_REGION=zh_CN" >> .lol.env
           echo "LOL_OUTPUT_PATH=$(realpath $WORK_DIR)" >> .lol.env
