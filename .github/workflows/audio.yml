@@ -49,8 +49,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: hash
-          repository: Virace2022/AudioUpdater
-          run-id: 10228688959
 
       - name: Unzip Hash Table File
         run: |
