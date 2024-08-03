@@ -48,6 +48,7 @@ jobs:
       - name: Download artifacts
         uses: dawidd6/action-download-artifact@v6
         with:
+          workflow: hash.yml
           name: hash
 
       - name: Unzip Hash Table File
