@@ -31,6 +31,7 @@ jobs:
         with:
           repository: Virace/lol_extract_voice
           path: lol_extract_voice
+          ref: v3-test
 
       - name: Set up Python
         uses: actions/setup-python@v2
