@@ -1,5 +1,8 @@
 # AudioUpdater
 
+[![Get Hash File](https://github.com/Virace2022/AudioUpdater/actions/workflows/hash.yml/badge.svg)](https://github.com/Virace2022/AudioUpdater/actions/workflows/hash.yml)
+[![Process Audio Files](https://github.com/Virace2022/AudioUpdater/actions/workflows/audio.yml/badge.svg)](https://github.com/Virace2022/AudioUpdater/actions/workflows/audio.yml)
+
 hash.yml 获取哈希表
 audio.yml 根据哈希表解包文件并上传
 
