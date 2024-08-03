@@ -68,7 +68,7 @@ jobs:
 
       - name: Compress the hash table file
         run: |
-          tar -zcf hash.tar.gz "$(realpath $WORK_DIR)/hashes"
+          tar -czf hash.tar.gz -C "$(realpath $WORK_DIR)" hashes
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
