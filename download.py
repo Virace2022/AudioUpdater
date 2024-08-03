@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+# @Author  : Virace
+# @Email   : Virace@aliyun.com
+# @Site    : x-item.com
+# @Software: Pycharm
+# @Create  : 2024/8/3 4:01
+# @Update  : 2024/8/3 15:38
+# @Detail  : 依赖ManifestDownloader的联盟资源下载脚本
+
 import argparse
 import os
 import platform
@@ -217,8 +226,8 @@ def main():
     game_type_map = {
         'c': r"DATA/FINAL/Champions/\w+.wad.client",
         'cz': r"DATA/FINAL/Champions/\w+.zh_CN.wad.client",
-        'm': r"DATA/FINAL/Maps/\w+.wad.client",
-        'mz': r"DATA/FINAL/Maps/\w+.zh_CN.wad.client"
+        'm': r"DATA/FINAL/Maps/Shipping/\w+.wad.client",
+        'mz': r"DATA/FINAL/Maps/Shipping/\w+.zh_CN.wad.client"
     }
 
     lcu_type_map = {
