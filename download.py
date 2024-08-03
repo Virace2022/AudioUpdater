@@ -4,7 +4,7 @@
 # @Site    : x-item.com
 # @Software: Pycharm
 # @Create  : 2024/8/3 4:01
-# @Update  : 2024/8/3 15:44
+# @Update  : 2024/8/3 16:57
 # @Detail  : 依赖ManifestDownloader的联盟资源下载脚本
 
 import argparse
@@ -76,7 +76,7 @@ def get_lcu_manifest_url(region='EUW'):
 def download(outpath, logpath, game_filter, lcu_filter, max_retries, mbin='./ManifestDownloader'):
     game_url = get_game_manifest_url()
     lcu_url = get_lcu_manifest_url()
-    logger.info(f"Need update: {game_url['live']['version']}")
+    logger.info(f"live version: {game_url['live']['version']}")
     logger.debug(f'GAME: {game_url}, LCU: {lcu_url}')
     g_log = os.path.join(logpath, 'game.log')
     l_log = os.path.join(logpath, 'lcu.log')
@@ -87,8 +87,12 @@ def download(outpath, logpath, game_filter, lcu_filter, max_retries, mbin='./Man
     while retry < max_retries and not success:
         logger.info(f"Start download attempt {retry + 1}")
 
+        # 版本
         os.system(
-            f'{mbin} {game_url["live"]["patch_url"]} -o "{os.path.join(outpath, "Game")}" -t 8  -f "{game_filter}" > {g_log}')
+            f'{mbin} {game_url["live"]["patch_url"]} -o "{outpath}" -t 8  -f "content-metadata.json" > {g_log}')
+        
+        os.system(
+            f'{mbin} {game_url["live"]["patch_url"]} -o "{os.path.join(outpath, "Game")}" -t 8  -f "{game_filter}" >> {g_log}')
         os.system(
             f'{mbin} {lcu_url["live"]["patch_url"]} -o "{os.path.join(outpath, "LeagueClient")}" -t 8  -f "{lcu_filter}" > {l_log}')
 
