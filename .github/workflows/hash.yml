@@ -51,16 +51,17 @@ jobs:
           . .download_venv/bin/activate
           pip install -r requirements.lock  1>/dev/null
           python download.py -g c -l l lz -o $DOWNLOAD_DIR -d $LOG_DIR -r 5 -m "ManifestDownloader"
+          echo "LOL_GAME_PATH=$(realpath $DOWNLOAD_DIR)" >> .lol.env
+          echo "LOL_GAME_REGION=zh_CN" >> .lol.env
+          echo "LOL_OUTPUT_PATH=$(realpath $WORK_DIR)" >> .lol.env
 
       - name: Get File Hash Table
         run: |
           python3 -m venv .h.venv
           . .h.venv/bin/activate
           pip install -r requirements.lock  1>/dev/null
-          rm .lol.env && touch .lol.env
-          echo "LOL_GAME_PATH=$(realpath $DOWNLOAD_DIR)" >> .lol.env
-          echo "LOL_GAME_REGION=zh_CN" >> .lol.env
-          echo "LOL_OUTPUT_PATH=$(realpath $WORK_DIR)" >> .lol.env
+          rm .lol.env && mv ../.lol.env .lol.env
+          
           python -c "from main import init, get_event_audio_hash_table, HASH_MANAGER; init(); HASH_MANAGER.game_data.update_data(); HASH_MANAGER.game_data_default.update_data();  get_event_audio_hash_table(True)"
         working-directory: lol_extract_voice
 
