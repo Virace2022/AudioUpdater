@@ -34,7 +34,7 @@ jobs:
           ref: v3-test
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
@@ -71,7 +71,7 @@ jobs:
           tar -zcf hash.tar.gz "$(realpath $WORK_DIR)/hashes"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: hash
           path: |
