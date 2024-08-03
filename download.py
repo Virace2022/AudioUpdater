@@ -4,7 +4,7 @@
 # @Site    : x-item.com
 # @Software: Pycharm
 # @Create  : 2024/8/3 4:01
-# @Update  : 2024/8/3 15:38
+# @Update  : 2024/8/3 15:44
 # @Detail  : 依赖ManifestDownloader的联盟资源下载脚本
 
 import argparse
@@ -255,7 +255,7 @@ def main():
     logger.info(f"ManifestDownloader 可执行文件: {args.manifest_downloader}")
 
     # 打印合并后的过滤器（用于测试）
-    logger.debug(f"使用的游戏过滤器: {game_combined_filter}")
+    logger.debug(f"使用的GAME过滤器: {game_combined_filter}")
     logger.debug(f"使用的LCU过滤器: {lcu_combined_filter}")
 
     os.makedirs(args.outpath, exist_ok=True)
