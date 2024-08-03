@@ -4,7 +4,7 @@
 # @Site    : x-item.com
 # @Software: Pycharm
 # @Create  : 2024/8/3 4:01
-# @Update  : 2024/8/3 16:57
+# @Update  : 2024/8/3 22:01
 # @Detail  : 依赖ManifestDownloader的联盟资源下载脚本
 
 import argparse
@@ -88,11 +88,10 @@ def download(outpath, logpath, game_filter, lcu_filter, max_retries, mbin='./Man
         logger.info(f"Start download attempt {retry + 1}")
 
         # 版本
+        # os.system(
+        #     f'{mbin} {game_url["live"]["patch_url"]} -o "{outpath}" -t 8  -f "content-metadata.json" > {g_log}')
         os.system(
-            f'{mbin} {game_url["live"]["patch_url"]} -o "{outpath}" -t 8  -f "content-metadata.json" > {g_log}')
-        
-        os.system(
-            f'{mbin} {game_url["live"]["patch_url"]} -o "{os.path.join(outpath, "Game")}" -t 8  -f "{game_filter}" >> {g_log}')
+            f'{mbin} {game_url["live"]["patch_url"]} -o "{os.path.join(outpath, "Game")}" -t 8  -f "{game_filter}|content-metadata.json" >> {g_log}')
         os.system(
             f'{mbin} {lcu_url["live"]["patch_url"]} -o "{os.path.join(outpath, "LeagueClient")}" -t 8  -f "{lcu_filter}" > {l_log}')
 
