@@ -70,7 +70,7 @@ jobs:
           echo "$R_CONFIG" | base64 --decode > ~/.config/rclone/rclone.conf
           curl https://rclone.org/install.sh | bash  1>/dev/null
           cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 1>/dev/null
-          rclone ls yandex:/connect
+          rclone ls yandex:/lol-voice
 
       - name: Download the required wad file
         run: |
