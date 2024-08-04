@@ -96,4 +96,4 @@ jobs:
       - name: Synchronize files
         run: |
           ls -a $(realpath $WORK_DIR)/audios
-          rclone copy --transfers=100 "$(realpath $WORK_DIR)/audios" yandex:/test
+          rclone copy --transfers=100 "$(realpath $WORK_DIR)/audios" yandex:/lol-voice
